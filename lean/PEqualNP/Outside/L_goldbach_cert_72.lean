@@ -6,8 +6,10 @@ SPDX-License-Identifier: Apache-2.0
 For modulus 72, the units are paired by a shift of 36. The half-period
 cancellation strategy and conversion to powers are adapted from
 longchangzheng's Goldbach PR #587 (modulus 128), commit
-dde70f03511fe3cf64b61288bbeeff453a9487c3. Here the finite unit-set
-identity is certified independently for modulus 72.
+dde70f03511fe3cf64b61288bbeeff453a9487c3. The primitive-root algebra
+also follows 26day's Goldbach PR #601 (modulus 144), commit
+23cb6d66b925442d3a860a467ed6ce5b3e7efdc3. The finite unit-set identity
+is certified independently for modulus 72.
 -/
 
 theorem PEqualNP.Outside.L_goldbach_cert_72 :
@@ -34,8 +36,12 @@ theorem PEqualNP.Outside.L_goldbach_cert_72 :
   let U : Finset ℕ := (Finset.range 72).filter (fun b => Nat.Coprime b 72)
   let L : Finset ℕ := (Finset.range 36).filter (fun b => Nat.Coprime b 72)
   let H : Finset ℕ := L.image (fun b => b + 36)
-  have hsplit : U = L ∪ H := by decide
-  have hdisj : Disjoint L H := by decide
+  have hsplit : U = L ∪ H := by
+    dsimp only [U, L, H]
+    decide
+  have hdisj : Disjoint L H := by
+    dsimp only [L, H]
+    decide
   have hsum : (∑ b ∈ H, z ^ b) = -(∑ b ∈ L, z ^ b) := by
     dsimp only [H]
     rw [Finset.sum_image]
